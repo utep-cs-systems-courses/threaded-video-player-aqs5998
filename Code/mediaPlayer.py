@@ -93,7 +93,7 @@ class queueThread:
         self.full = threading.Semaphore(0)
         self.empty = threading.Semaphore(70)
         self.lock = threading.Lock()
-
+        exit
 
     def enqueue(self, item):
         self.empty.acquire()
