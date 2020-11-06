@@ -19,7 +19,6 @@ def convertToGray(colorframes, grayframes):
     inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
     while inputFrame is not None and count < 72:
         print(f'Converting frame {count}') # convert the image to grayscale
-        getFrame = colorframes.dequeue()
         grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
         outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
         cv2.imwrite(outFileName, grayscaleFrame)
@@ -80,9 +79,7 @@ class queueThread:
         self.queue=[]
         self.full=threading.Semaphore(0)
         self.empty = threading.Semaphore(24)
-        self.empty = threading.Semaphore(15)
         self.lock=threading.Lock()
-
     def enqueue(self, item):
         self.empty.acquire()
         self.lock.acquire()
@@ -99,7 +96,7 @@ class queueThread:
 colorFrames = queueThread()
 grayFrames = queueThread()
 extraceT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
-convertT = threading.Thread(target = convertToGray, args = (grayFrames, colorFrames))
+convertT = threading.Thread(target = convertToGray, args = (clipFileName, colorFrames))
 displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
 extraceT.start()
 convertT.start()
