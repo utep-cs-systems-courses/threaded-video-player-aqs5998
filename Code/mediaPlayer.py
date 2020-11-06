@@ -119,4 +119,4 @@ displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
 
 extraceT.start()
 #convertT.start()
-displayT.start()
+#displayT.start()
