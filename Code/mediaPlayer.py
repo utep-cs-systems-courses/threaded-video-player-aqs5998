@@ -4,7 +4,6 @@ import cv2
 import threading
 import numpy as np
 import base64
-import queue
 import os
 import queue
 
