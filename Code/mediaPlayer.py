@@ -32,8 +32,7 @@ def convertToGray(colorFrames, grayFrames):
         cv2.imwrite(outFileName, grayscaleFrame)
         grayFrames.enqueue(grayscaleFrame)
         count += 1
-        if(cv2.waitKey(42) and 0xFF == ord("q")):
-            break
+        
         # generate input file name for the next frame
         inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
