@@ -13,7 +13,7 @@ clipFileName = '../clip.mp4'
 
 
 
-def convertToGray(colorframes, grayframes):
+def convertToGray(colorFrames, grayFrames):
     outputDir    = 'frames'
     # initialize frame count
     count = 0
@@ -23,15 +23,17 @@ def convertToGray(colorframes, grayframes):
     inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
     while inputFrame is not None and count < 72:
         print(f'Converting frame {count}') # convert the image to grayscale
+        colorFrames.enqueue('!')
         grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
         outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
         cv2.imwrite(outFileName, grayscaleFrame)
-        grayframes.enqueue(grayscaleFrame)
+        grayFrames.enqueue(grayscaleFrame)
         count += 1
         # generate input file name for the next frame
         inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
         inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+    grayFrames.enqueue('!')
 
 def displayFrames(grayFrames):
     # globals
@@ -80,6 +82,8 @@ def extractFrames(clipFileName, colorFrames):
         success,image = vidcap.read()
         print(f'Reading frame {count}')
         count += 1
+    colorFrames.enqueue('!')
+
 
 class queueThread:
     def __init__(self):
