@@ -91,7 +91,7 @@ class queueThread:
     def __init__(self):
         self.queue = []
         self.full = threading.Semaphore(0)
-        self.empty = threading.Semaphore(24)
+        self.empty = threading.Semaphore(70)
         self.lock = threading.Lock()
 
 
