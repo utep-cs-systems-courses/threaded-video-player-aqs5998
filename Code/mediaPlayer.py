@@ -48,7 +48,7 @@ def displayFrames(grayFrames):
     # load the frame
     while True:
         
-        print(f'Displaying frame {count}')
+        print(f'Reading frame {count} {success}')
         #get next frame
         frame = grayFrames.dequeue()
         if frame == '!':
