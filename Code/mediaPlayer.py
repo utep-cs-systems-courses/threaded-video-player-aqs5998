@@ -2,18 +2,20 @@
 
 import cv2
 import threading
-import cv2
 import numpy as np
 import base64
 import queue
 import os
+import queue
 
 # globals
 outputDir    = 'frames'
-clipFileName = 'clip.mp4'
+clipFileName = '../clip.mp4'
+
 
 
 def convertToGray(colorframes, grayframes):
+    outputDir    = 'frames'
     # initialize frame count
     count = 0
     # get the next frame file name
@@ -25,13 +27,14 @@ def convertToGray(colorframes, grayframes):
         grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
         outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
         cv2.imwrite(outFileName, grayscaleFrame)
+        grayframes.enqueue(grayscaleFrame)
         count += 1
         # generate input file name for the next frame
         inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
         inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
 
-def displayFrames(colorFrames, grayFrames):
+def displayFrames(grayFrames):
     # globals
     outputDir    = 'frames'
     frameDelay   = 42       # the answer to everything
@@ -42,6 +45,7 @@ def displayFrames(colorFrames, grayFrames):
     # load the frame
     frame = cv2.imread(frameFileName)
     while frame is not None:
+        
         print(f'Displaying frame {count}')
         # Display the frame in a window called "Video"
         cv2.imshow('Video', frame)
@@ -50,27 +54,63 @@ def displayFrames(colorFrames, grayFrames):
             break    
         # get the next frame filename
         count += 1
+
         frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
         # Read the next frame file
         frame = cv2.imread(frameFileName)
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
 
-def extractFrames(file, colorFrames):
+def extractFrames(clipFileName, colorFrames):
     # initialize frame count
     count = 0
     # open the video clip
     vidcap = cv2.VideoCapture(clipFileName)
     # create the output directory if it doesn't exist
     if not os.path.exists(outputDir):
-    print(f"Output directory {outputDir} didn't exist, creating")
-    os.makedirs(outputDir)
+        print(f"Output directory {outputDir} didn't exist, creating")
+        os.makedirs(outputDir)
+    
     # read one frame
     success,image = vidcap.read()
     print(f'Reading frame {count} {success}')
-    while success and count < 72:
-    # write the current frame out as a jpeg image
-    cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
-    success,image = vidcap.read()
-    print(f'Reading frame {count}')
-    count += 1
+    while success:
+        colorFrames.enqueue(image)
+        # write the current frame out as a jpeg image
+        cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
+        success,image = vidcap.read()
+        print(f'Reading frame {count}')
+        count += 1
+
+class queueThread:
+    def __init__(self):
+        self.queue=[]
+        self.full=threading.Semaphore(0)
+        self.full=threading.Semaphore(24) #Frames
+        self.full=threading.lock()
+
+    def enqueue(self, item):
+        self.empty.aquire()
+        self.lock.aquire()
+        self.queue.append(item)
+        self.lock.release()
+        self.full.release
+
+    def dequeue(self):
+        self.full.acquire()
+        self.lock.acquire()
+        frame = self.queue.pop(0)
+        self.lock.release()
+        self.empty.release()
+        return frame
+
+colorFrames = queueThread()
+grayFrames = queueThread()
+
+extraceT = threading.Thread(target = extracting, args = (clipFileName, colorframes))
+convertT = threading.Thread(target = extracting, args = (clipFileName, colorframes))
+displayT = threading.Thread(target = display, args = (grayframes,))
+
+extraceT.start()
+convertT.start()
+displayT.start()
