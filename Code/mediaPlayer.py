@@ -3,34 +3,31 @@ import cv2
 import threading
 import numpy as np
 import base64
+import queue
 import os
 import queue
 # globals
 outputDir    = 'frames'
 clipFileName = '../clip.mp4'
-def convertToGray(colorFrames, grayFrames):
+def convertToGray(colorframes, grayframes):
     outputDir    = 'frames'
     # initialize frame count
     count = 0
+    # get the next frame file name
+    inFileName = f'{outputDir}/frame_{count:04d}.bmp'
     # load the next file
-    while True:
+    inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+    while inputFrame is not None and count < 72:
         print(f'Converting frame {count}') # convert the image to grayscale
-        getFrame = colorFrames.dequeue()
-        if getFrame == '!' or cv2.waitKey(42):
-            break
-        colorFrames.enqueue('!')
-        grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY) # generate output file name
+        grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
         outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
         cv2.imwrite(outFileName, grayscaleFrame)
-        grayFrames.enqueue(grayscaleFrame)
+        grayframes.enqueue(grayscaleFrame)
         count += 1
-        if(cv2.waitKey(42) and 0xFF == ord("q")):
-            break
         # generate input file name for the next frame
         inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
         inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
-    grayFrames.enqueue('!')
 def displayFrames(grayFrames):
     # globals
     outputDir    = 'frames'
@@ -38,21 +35,22 @@ def displayFrames(grayFrames):
     # initialize frame count
     count = 0
     # Generate the filename for the first frame 
+    frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
     # load the frame
-    while True:
-        print(f'Reading frame {count}')
-        #get next frame
-        frame = grayFrames.dequeue()
-        if frame == '!':
-            break
+    frame = cv2.imread(frameFileName)
+    while frame is not None:
+        
+        print(f'Displaying frame {count}')
         # Display the frame in a window called "Video"
         cv2.imshow('Video', frame)
         # Wait for 42 ms and check if the user wants to quit
-        if(cv2.waitKey(42) and 0xFF == ord("q")):
-            break
+        if cv2.waitKey(frameDelay) and 0xFF == ord("q"):
+            break    
         # get the next frame filename
         count += 1
+        frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
         # Read the next frame file
+        frame = cv2.imread(frameFileName)
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
 def extractFrames(clipFileName, colorFrames):
@@ -71,26 +69,24 @@ def extractFrames(clipFileName, colorFrames):
     while success:
         colorFrames.enqueue(image)
         # write the current frame out as a jpeg image
+        cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
         success,image = vidcap.read()
-        if cv2.waitKey(42) and 0xFF == ord("q"):
-            break    
         print(f'Reading frame {count}')
         count += 1
-    colorFrames.enqueue('!')
 class queueThread:
     def __init__(self):
-        self.queue = []
-        self.full = threading.Semaphore(0)
+        self.queue=[]
+        self.full=threading.Semaphore(0)
         self.empty = threading.Semaphore(24)
-        self.lock = threading.Lock()
-
+        self.lock=threading.lock()
+        self.lock=threading.Lock()
 
     def enqueue(self, item):
         self.empty.acquire()
         self.lock.acquire()
         self.queue.append(item)
         self.lock.release()
-        self.full.release()
+        self.full.release
     def dequeue(self):
         self.full.acquire()
         self.lock.acquire()
@@ -100,9 +96,9 @@ class queueThread:
         return frame
 colorFrames = queueThread()
 grayFrames = queueThread()
-extracT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
-convertT = threading.Thread(target = convertToGray, args = (colorFrames, grayFrames))
+extraceT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
+convertT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
 displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
-extracT.start()
+extraceT.start()
 convertT.start()
 displayT.start()
