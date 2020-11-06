@@ -10,25 +10,29 @@ import queue
 outputDir    = 'frames'
 clipFileName = '../clip.mp4'
 def convertToGray(colorframes, grayframes):
-    outputDir    = 'frames'
-    # initialize frame count
-    count = 0
-    # get the next frame file name
-    inFileName = f'{outputDir}/frame_{count:04d}.bmp'
-    # load the next file
-    inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
-    while inputFrame is not None and count < 72:
-        print(f'Converting frame {count}') # convert the image to grayscale
+    count = 0 #Initialize frame count
+
+    #going through color frames
+    while True:
+        print('Converting frame {count}')
+
+        #get frames
         getFrame = colorframes.dequeue()
-        grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
-        outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
-        cv2.imwrite(outFileName, grayscaleFrame)
+        if getFrame == '!':
+            break
+        
+        #convert to grayscale
+        grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY)
+
+        #put gray frames in queue
         grayframes.enqueue(grayscaleFrame)
+        
         count += 1
-        # generate input file name for the next frame
-        inFileName = f'{outputDir}/frame_{count:04d}.bmp'
-        # load the next frame
-        inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+
+    print('Converting to gray done!')
+    grayframes.enqueue('!')
+
+
 def displayFrames(grayFrames):
     # globals
     outputDir    = 'frames'
@@ -39,7 +43,7 @@ def displayFrames(grayFrames):
     frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
     # load the frame
     frame = cv2.imread(frameFileName)
-    while frame is not None:
+    while True:
         
         print(f'Displaying frame {count}')
         frame = grayFrames.dequeue()
