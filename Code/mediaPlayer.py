@@ -78,7 +78,6 @@ class queueThread:
         self.queue=[]
         self.full=threading.Semaphore(0)
         self.empty = threading.Semaphore(24)
-        self.lock=threading.lock()
         self.lock=threading.Lock()
 
     def enqueue(self, item):
