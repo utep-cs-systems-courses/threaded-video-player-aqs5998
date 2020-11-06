@@ -87,7 +87,7 @@ class queueThread:
         self.queue=[]
         self.full=threading.Semaphore(0)
         self.full=threading.Semaphore(24) #Frames
-        self.full=threading.lock()
+        self.lock=threading.lock()
 
     def enqueue(self, item):
         self.empty.aquire()
