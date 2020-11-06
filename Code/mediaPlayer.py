@@ -27,7 +27,7 @@ def convertToGray(colorFrames, grayFrames):
         if getFrame == '!' or cv2.waitKey(42):
             break
         colorFrames.enqueue('!')
-        grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
+        grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY) # generate output file name
         outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
         cv2.imwrite(outFileName, grayscaleFrame)
         grayFrames.enqueue(grayscaleFrame)
@@ -82,7 +82,6 @@ def extractFrames(clipFileName, colorFrames):
     while success:
         colorFrames.enqueue(image)
         # write the current frame out as a jpeg image
-        cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
         success,image = vidcap.read()
         if cv2.waitKey(42) and 0xFF == ord("q"):
             break    
