@@ -6,78 +6,75 @@ import base64
 import queue
 import os
 import queue
-
 # globals
 outputDir    = 'frames'
 clipFileName = '../clip.mp4'
 def convertToGray(colorframes, grayframes):
-    count = 0 #Initialize frame count
-
-    #going through color frames
-    while True:
-        print('Converting frame {count}')
-
-        #get frames
+    outputDir    = 'frames'
+    # initialize frame count
+    count = 0
+    # get the next frame file name
+    inFileName = f'{outputDir}/frame_{count:04d}.bmp'
+    # load the next file
+    inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+    while inputFrame is not None and count < 72:
+        print(f'Converting frame {count}') # convert the image to grayscale
         getFrame = colorframes.dequeue()
-        if getFrame == '!':
-            break
-        
-        #convert to grayscale
-        grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY)
-
-        #put gray frames in queue
+        grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
+        outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
+        cv2.imwrite(outFileName, grayscaleFrame)
         grayframes.enqueue(grayscaleFrame)
-        
         count += 1
-
-    print('Converting to gray done!')
-    grayframes.enqueue('!')
-
-
+        # generate input file name for the next frame
+        inFileName = f'{outputDir}/frame_{count:04d}.bmp'
+        # load the next frame
+        inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
 def displayFrames(grayFrames):
-    count = 0 #Initialize frame count
-
-    #going through gray frames
-    while True:
-        print(f'Displaying Frame{count}')
-
-        #get next frame
-        frame = grayFrames.dequeue()
-        if frame == '!':
-            break
+    # globals
+    outputDir    = 'frames'
+    frameDelay   = 42       # the answer to everything
+    # initialize frame count
+    count = 0
+    # Generate the filename for the first frame 
+    frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
+    # load the frame
+    frame = cv2.imread(frameFileName)
+    while frame is not None:
         
-        #display image called Video
+        print(f'Displaying frame {count}')
+        frame = grayFrames.dequeue()
+        # Display the frame in a window called "Video"
         cv2.imshow('Video', frame)
-        #wait for 42ms before next frame
-        if(cv2.waitKey(42) and 0xFF == ord("q")):
-           break
-
+        # Wait for 42 ms and check if the user wants to quit
+        if cv2.waitKey(frameDelay) and 0xFF == ord("q"):
+            break    
+        # get the next frame filename
         count += 1
-
-    print('Finished with display!')
-    #make sure we cleanup the windows!
+        frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
+        # Read the next frame file
+        frame = cv2.imread(frameFileName)
+    # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
-
 def extractFrames(clipFileName, colorFrames):
-    count =  0 #Initialize frame count
-
-    #open video file
+    # initialize frame count
+    count = 0
+    # open the video clip
     vidcap = cv2.VideoCapture(clipFileName)
-
-    #read first image
-    success, image = vidcap.read()
+    # create the output directory if it doesn't exist
+    if not os.path.exists(outputDir):
+        print(f"Output directory {outputDir} didn't exist, creating")
+        os.makedirs(outputDir)
     
+    # read one frame
+    success,image = vidcap.read()
     print(f'Reading frame {count} {success}')
     while success:
-        #put frames in queue
         colorFrames.enqueue(image)
-
-        success, image = vidcap.read()
+        # write the current frame out as a jpeg image
+        cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
+        success,image = vidcap.read()
         print(f'Reading frame {count}')
         count += 1
-        
-    print('Extracting is done!')
-    colorFrames.enqueue('!')
         
 class queueThread:
     def __init__(self):
