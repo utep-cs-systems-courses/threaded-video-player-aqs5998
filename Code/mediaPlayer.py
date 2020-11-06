@@ -115,8 +115,8 @@ grayFrames = queueThread()
 
 extraceT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
 convertT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
-displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
+#displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
 
 extraceT.start()
 convertT.start()
-displayT.start()
+#displayT.start()
