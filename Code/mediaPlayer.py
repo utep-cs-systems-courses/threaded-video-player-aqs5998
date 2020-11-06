@@ -23,6 +23,9 @@ def convertToGray(colorFrames, grayFrames):
     inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
     while inputFrame is not None and count < 72:
         print(f'Converting frame {count}') # convert the image to grayscale
+        getFrame = colorFrames.dequeue()
+        if getFrame == '!':
+            break
         colorFrames.enqueue('!')
         grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
         outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
@@ -48,6 +51,10 @@ def displayFrames(grayFrames):
     while frame is not None:
         
         print(f'Displaying frame {count}')
+        #get next frame
+        frame = grayFrames.dequeue()
+        if frame == '!':
+            break
         # Display the frame in a window called "Video"
         cv2.imshow('Video', frame)
         # Wait for 42 ms and check if the user wants to quit
