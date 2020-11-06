@@ -48,9 +48,7 @@ def displayFrames(grayFrames):
     # Generate the filename for the first frame 
     # load the frame
     while True:
-        vidcap = cv2.VideoCapture(clipFileName)
-        success,image = vidcap.read()
-        print(f'Reading frame {count} {success}')
+        print(f'Reading frame {count}')
         #get next frame
         frame = grayFrames.dequeue()
         if frame == '!':
