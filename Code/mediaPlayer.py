@@ -32,7 +32,8 @@ def convertToGray(colorFrames, grayFrames):
         cv2.imwrite(outFileName, grayscaleFrame)
         grayFrames.enqueue(grayscaleFrame)
         count += 1
-    
+        if(cv2.waitKey(42) and 0xFF == ord("q")):
+            break
         # generate input file name for the next frame
         inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
@@ -83,7 +84,7 @@ def extractFrames(clipFileName, colorFrames):
         # write the current frame out as a jpeg image
         cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
         success,image = vidcap.read()
-        if cv2.waitKey(cv2.waitKey(42)) and 0xFF == ord("q"):
+        if cv2.waitKey(42) and 0xFF == ord("q"):
             break    
         print(f'Reading frame {count}')
         count += 1
