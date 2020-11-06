@@ -26,16 +26,12 @@ def convertToGray(colorFrames, grayFrames):
             break
         colorFrames.enqueue('!')
         grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY) # generate output file name
-        outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
-        cv2.imwrite(outFileName, grayscaleFrame)
         grayFrames.enqueue(grayscaleFrame)
         count += 1
         if(cv2.waitKey(42) and 0xFF == ord("q")):
             break
         # generate input file name for the next frame
-        inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
-        inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
     grayFrames.enqueue('!')
 
 def displayFrames(grayFrames):
