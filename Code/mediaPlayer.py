@@ -6,6 +6,7 @@ import numpy as np
 import base64
 import os
 import queue
+import sys
 
 # globals
 outputDir    = 'frames'
@@ -62,6 +63,7 @@ def displayFrames(grayFrames):
         # Read the next frame file
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
+    sys.exit(1)
 
 def extractFrames(clipFileName, colorFrames):
     # initialize frame count
