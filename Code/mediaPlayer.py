@@ -121,6 +121,6 @@ extraceT = threading.Thread(target = extractFrames, args = (clipFileName, colorF
 #convertT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
 displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
 
-extraceT.start()
+#extraceT.start()
 #convertT.start()
-#displayT.start()
+displayT.start()
