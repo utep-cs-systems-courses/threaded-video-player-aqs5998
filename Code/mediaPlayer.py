@@ -103,7 +103,7 @@ class queueThread:
         self.lock.acquire()
         self.queue.append(item)
         self.lock.release()
-        self.full.release
+        self.full.release()
 
     def dequeue(self):
         self.full.acquire()
