@@ -73,6 +73,7 @@ def extractFrames(clipFileName, colorFrames):
         success,image = vidcap.read()
         print(f'Reading frame {count}')
         count += 1
+        
 class queueThread:
     def __init__(self):
         self.queue=[]
