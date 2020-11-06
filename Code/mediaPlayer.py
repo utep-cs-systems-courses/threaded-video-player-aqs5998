@@ -81,7 +81,6 @@ class queueThread:
     def __init__(self):
         self.queue = []
         self.full = threading.Semaphore(0)
-        self.empty = threading.Semaphore(24)
         self.empty = threading.Semaphore(70)
         self.lock = threading.Lock()
 
@@ -99,7 +98,7 @@ class queueThread:
         self.lock.release()
         self.empty.release()
         return frame
-        
+
 colorFrames = queueThread()
 grayFrames = queueThread()
 extracT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
