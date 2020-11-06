@@ -19,7 +19,7 @@ def convertToGray(colorFrames, grayFrames):
     # initialize frame count
     count = 0
     # load the next file
-    while True:
+    while not colorFrames.empty():
         print(f'Converting frame {count}') # convert the image to grayscale
         getFrame = colorFrames.dequeue()
         if getFrame == '!' or cv2.waitKey(42):
@@ -39,7 +39,7 @@ def displayFrames(grayFrames):
     count = 0
     # Generate the filename for the first frame 
     # load the frame
-    while True:
+    while not grayFrames.empty():
         print(f'Reading frame {count}')
         #get next frame
         frame = grayFrames.dequeue()
@@ -71,7 +71,7 @@ def extractFrames(clipFileName, colorFrames):
     # read one frame
     success,image = vidcap.read()
     print(f'Reading frame {count} {success}')
-    while success:
+    while not colorFrames.empty():
         colorFrames.enqueue(image)
         # write the current frame out as a jpeg image
         success,image = vidcap.read()
