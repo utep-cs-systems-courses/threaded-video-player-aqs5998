@@ -71,7 +71,7 @@ def extractFrames(clipFileName, colorFrames):
     # read one frame
     success,image = vidcap.read()
     print(f'Reading frame {count} {success}')
-    while not colorFrames.empty():
+    while success:
         colorFrames.enqueue(image)
         # write the current frame out as a jpeg image
         success,image = vidcap.read()
