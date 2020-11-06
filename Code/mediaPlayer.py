@@ -24,12 +24,9 @@ def convertToGray(colorFrames, grayFrames):
         getFrame = colorFrames.dequeue()
         if getFrame == '!' or cv2.waitKey(42):
             break
-        colorFrames.enqueue('!')
         grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY) # generate output file name
         grayFrames.enqueue(grayscaleFrame)
         count += 1
-        if(cv2.waitKey(42) and 0xFF == ord("q")):
-            break
         # generate input file name for the next frame
         # load the next frame
     grayFrames.enqueue('!')
