@@ -6,7 +6,6 @@ import numpy as np
 import base64
 import os
 import queue
-import sys
 
 # globals
 outputDir    = 'frames'
@@ -18,17 +17,27 @@ def convertToGray(colorFrames, grayFrames):
     outputDir    = 'frames'
     # initialize frame count
     count = 0
+    # get the next frame file name
+    inFileName = f'{outputDir}/frame_{count:04d}.bmp'
     # load the next file
+    inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
     while True:
         print(f'Converting frame {count}') # convert the image to grayscale
-        frame = colorFrames.dequeue()
-        if frame == '!' or cv2.waitKey(42):
+        getFrame = colorFrames.dequeue()
+        if getFrame == '!' or cv2.waitKey(42):
             break
-        grayscaleFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # generate output file name
+        colorFrames.enqueue('!')
+        grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
+        outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
+        cv2.imwrite(outFileName, grayscaleFrame)
         grayFrames.enqueue(grayscaleFrame)
         count += 1
+        if(cv2.waitKey(42) and 0xFF == ord("q")):
+            break
         # generate input file name for the next frame
+        inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
+        inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
     grayFrames.enqueue('!')
 
 def displayFrames(grayFrames):
@@ -56,7 +65,6 @@ def displayFrames(grayFrames):
         # Read the next frame file
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
-    sys.exit(1)
 
 def extractFrames(clipFileName, colorFrames):
     # initialize frame count
@@ -74,6 +82,7 @@ def extractFrames(clipFileName, colorFrames):
     while success:
         colorFrames.enqueue(image)
         # write the current frame out as a jpeg image
+        cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
         success,image = vidcap.read()
         if cv2.waitKey(42) and 0xFF == ord("q"):
             break    
@@ -84,11 +93,10 @@ def extractFrames(clipFileName, colorFrames):
 
 class queueThread:
     def __init__(self):
-        self.queue = []
-        self.full = threading.Semaphore(0)
-        self.empty = threading.Semaphore(70)
-        self.lock = threading.Lock()
-        exit
+        self.queue=[]
+        self.full=threading.Semaphore(0)
+        self.empty = threading.Semaphore(24)
+        self.lock=threading.Lock()
 
     def enqueue(self, item):
         self.empty.acquire()
