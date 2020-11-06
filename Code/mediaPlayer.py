@@ -45,10 +45,8 @@ def displayFrames(grayFrames):
     # initialize frame count
     count = 0
     # Generate the filename for the first frame 
-    frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
     # load the frame
-    frame = cv2.imread(frameFileName)
-    while frame is not None:
+    while True:
         
         print(f'Displaying frame {count}')
         #get next frame
@@ -63,9 +61,7 @@ def displayFrames(grayFrames):
         # get the next frame filename
         count += 1
 
-        frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
         # Read the next frame file
-        frame = cv2.imread(frameFileName)
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
 
