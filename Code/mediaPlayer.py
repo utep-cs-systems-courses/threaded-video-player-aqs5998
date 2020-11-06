@@ -90,8 +90,8 @@ class queueThread:
         self.lock=threading.lock()
 
     def enqueue(self, item):
-        self.empty.aquire()
-        self.lock.aquire()
+        self.empty.acquire()
+        self.lock.acquire()
         self.queue.append(item)
         self.lock.release()
         self.full.release
