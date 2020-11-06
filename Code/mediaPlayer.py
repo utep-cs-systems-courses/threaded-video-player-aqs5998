@@ -19,8 +19,7 @@ def convertToGray(colorFrames, grayFrames):
     # initialize frame count
     count = 0
     # load the next file
-    frame = colorFrames.dequeue()
-    while frame != '!':
+    while True:
         print(f'Converting frame {count}') # convert the image to grayscale
         frame = colorFrames.dequeue()
         if frame == '!' or cv2.waitKey(42):
