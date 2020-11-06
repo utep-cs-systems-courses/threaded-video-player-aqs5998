@@ -17,10 +17,7 @@ def convertToGray(colorFrames, grayFrames):
     outputDir    = 'frames'
     # initialize frame count
     count = 0
-    # get the next frame file name
-    inFileName = f'{outputDir}/frame_{count:04d}.bmp'
     # load the next file
-    inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
     while True:
         print(f'Converting frame {count}') # convert the image to grayscale
         getFrame = colorFrames.dequeue()
