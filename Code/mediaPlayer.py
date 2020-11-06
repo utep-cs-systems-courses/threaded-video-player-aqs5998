@@ -19,12 +19,13 @@ def convertToGray(colorFrames, grayFrames):
     # initialize frame count
     count = 0
     # load the next file
-    while not colorFrames.empty():
+    frame = colorFrames.dequeue()
+    while frame != '!':
         print(f'Converting frame {count}') # convert the image to grayscale
-        getFrame = colorFrames.dequeue()
-        if getFrame == '!' or cv2.waitKey(42):
+        frame = colorFrames.dequeue()
+        if frame == '!' or cv2.waitKey(42):
             break
-        grayscaleFrame = cv2.cvtColor(getFrame, cv2.COLOR_BGR2GRAY) # generate output file name
+        grayscaleFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # generate output file name
         grayFrames.enqueue(grayscaleFrame)
         count += 1
         # generate input file name for the next frame
@@ -39,7 +40,7 @@ def displayFrames(grayFrames):
     count = 0
     # Generate the filename for the first frame 
     # load the frame
-    while not grayFrames.empty():
+    while True:
         print(f'Reading frame {count}')
         #get next frame
         frame = grayFrames.dequeue()
