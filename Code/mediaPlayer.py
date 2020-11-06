@@ -103,7 +103,7 @@ class queueThread:
         self.lock.acquire()
         self.queue.append(item)
         self.lock.release()
-        self.full.release()
+        self.full.release
 
     def dequeue(self):
         self.full.acquire()
@@ -117,7 +117,7 @@ colorFrames = queueThread()
 grayFrames = queueThread()
 
 extracT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
-convertT = threading.Thread(target = convertToGray, args = (colorFrames, grayFrames))
+convertT = threading.Thread(target = convertToGray, args = (clipFileName, grayFrames))
 displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
 
 extracT.start()
