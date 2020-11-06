@@ -24,7 +24,7 @@ def convertToGray(colorFrames, grayFrames):
     while True:
         print(f'Converting frame {count}') # convert the image to grayscale
         getFrame = colorFrames.dequeue()
-        if getFrame == '!':
+        if getFrame == '!' or cv2.waitKey(42):
             break
         colorFrames.enqueue('!')
         grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
@@ -32,6 +32,7 @@ def convertToGray(colorFrames, grayFrames):
         cv2.imwrite(outFileName, grayscaleFrame)
         grayFrames.enqueue(grayscaleFrame)
         count += 1
+    
         # generate input file name for the next frame
         inFileName = f'{outputDir}/frame_{count:04d}.bmp'
         # load the next frame
@@ -47,7 +48,8 @@ def displayFrames(grayFrames):
     # Generate the filename for the first frame 
     # load the frame
     while True:
-        
+        vidcap = cv2.VideoCapture(clipFileName)
+        success,image = vidcap.read()
         print(f'Reading frame {count} {success}')
         #get next frame
         frame = grayFrames.dequeue()
@@ -56,7 +58,7 @@ def displayFrames(grayFrames):
         # Display the frame in a window called "Video"
         cv2.imshow('Video', frame)
         # Wait for 42 ms and check if the user wants to quit
-        if cv2.waitKey(frameDelay) and 0xFF == ord("q"):
+        if cv2.waitKey(cv2.waitKey(42)) and 0xFF == ord("q"):
             break    
         # get the next frame filename
         count += 1
@@ -83,6 +85,8 @@ def extractFrames(clipFileName, colorFrames):
         # write the current frame out as a jpeg image
         cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
         success,image = vidcap.read()
+        if cv2.waitKey(cv2.waitKey(42)) and 0xFF == ord("q"):
+            break    
         print(f'Reading frame {count}')
         count += 1
     colorFrames.enqueue('!')
