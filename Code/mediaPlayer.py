@@ -6,6 +6,7 @@ import base64
 import queue
 import os
 import queue
+
 # globals
 outputDir    = 'frames'
 clipFileName = '../clip.mp4'
@@ -34,31 +35,29 @@ def convertToGray(colorframes, grayframes):
 
 
 def displayFrames(grayFrames):
-    # globals
-    outputDir    = 'frames'
-    frameDelay   = 42       # the answer to everything
-    # initialize frame count
-    count = 0
-    # Generate the filename for the first frame 
-    frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
-    # load the frame
-    frame = cv2.imread(frameFileName)
+    count = 0 #Initialize frame count
+
+    #going through gray frames
     while True:
-        
-        print(f'Displaying frame {count}')
+        print(f'Displaying Frame{count}')
+
+        #get next frame
         frame = grayFrames.dequeue()
-        # Display the frame in a window called "Video"
+        if frame == '!':
+            break
+        
+        #display image called Video
         cv2.imshow('Video', frame)
-        # Wait for 42 ms and check if the user wants to quit
-        if cv2.waitKey(frameDelay) and 0xFF == ord("q"):
-            break    
-        # get the next frame filename
+        #wait for 42ms before next frame
+        if(cv2.waitKey(42) and 0xFF == ord("q")):
+           break
+
         count += 1
-        frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
-        # Read the next frame file
-        frame = cv2.imread(frameFileName)
-    # make sure we cleanup the windows, otherwise we might end up with a mess
+
+    print('Finished with display!')
+    #make sure we cleanup the windows!
     cv2.destroyAllWindows()
+
 def extractFrames(clipFileName, colorFrames):
     # initialize frame count
     count = 0
