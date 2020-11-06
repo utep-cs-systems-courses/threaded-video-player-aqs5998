@@ -58,8 +58,8 @@ def displayFrames(grayFrames):
         # Display the frame in a window called "Video"
         cv2.imshow('Video', frame)
         # Wait for 42 ms and check if the user wants to quit
-        if cv2.waitKey(cv2.waitKey(42)) and 0xFF == ord("q"):
-            break    
+        if(cv2.waitKey(42) and 0xFF == ord("q")):
+            break
         # get the next frame filename
         count += 1
 
