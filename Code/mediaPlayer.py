@@ -54,25 +54,20 @@ def displayFrames(grayFrames):
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
 def extractFrames(clipFileName, colorFrames):
-    # initialize frame count
     count = 0
-    # open the video clip
     vidcap = cv2.VideoCapture(clipFileName)
-    # create the output directory if it doesn't exist
-    if not os.path.exists(outputDir):
-        print(f"Output directory {outputDir} didn't exist, creating")
-        os.makedirs(outputDir)
-    
     # read one frame
     success,image = vidcap.read()
     print(f'Reading frame {count} {success}')
-    while success:
-        colorFrames.enqueue(image)
+    while success and count < 72:
         # write the current frame out as a jpeg image
-        cv2.imwrite(f"{outputDir}/frame_{count:04d}.bmp", image)   
+        #Transform into a jpg image
+        success, jpgImage = cv2.imencode('.jpg', image)
+        colorFrames.enqueue(jpgImage)
         success,image = vidcap.read()
         print(f'Reading frame {count}')
         count += 1
+    colorFrames.enqueue(None)
         
 class queueThread:
     def __init__(self):
