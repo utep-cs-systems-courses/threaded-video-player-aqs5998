@@ -10,24 +10,26 @@ import queue
 outputDir    = 'frames'
 clipFileName = '../clip.mp4'
 def convertToGray(colorframes, grayframes):
-    outputDir    = 'frames'
-    # initialize frame count
+     # initialize frame count
     count = 0
+
     # get the next frame file name
-    inFileName = f'{outputDir}/frame_{count:04d}.bmp'
-    # load the next file
-    inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+    inputFrame = colorFrames.dequeue()
+
     while inputFrame is not None and count < 72:
-        print(f'Converting frame {count}') # convert the image to grayscale
-        grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)  # generate output file name
-        outFileName = f'{outputDir}/grayscale_{count:04d}.bmp' # write output file
-        cv2.imwrite(outFileName, grayscaleFrame)
-        grayframes.enqueue(grayscaleFrame)
+        print(f'Converting frame {count}')
+        inputFrame = np.asarray(bytearray(inputFrame), dtype = np.uint8)
+        image = cv2.imdecode(inputFrame, cv2.IMREAD_UNCHANGED)
+        # convert the image to grayscale
+        grayscaleFrame = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        success, jpgImage = cv2.imencode('.jpg', grayscaleFrame)
+        #change it to enqueue into the grayFramesQueue
+        grayFrames.enqueue(jpgImage)
         count += 1
         # generate input file name for the next frame
-        inFileName = f'{outputDir}/frame_{count:04d}.bmp'
-        # load the next frame
-        inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+        #TODO change it to dequeue from readFramesQueue
+        inputFrame = colorFrames.dequeue() ###
+    grayFrames.enqueue(None)
 def displayFrames(grayFrames):
     # globals
     outputDir    = 'frames'
