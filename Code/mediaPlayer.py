@@ -17,7 +17,7 @@ def convertToGray(colorframes, grayframes):
     # get the first jpg encoded frame from the queue
     inputFrame = colorframes.dequeue()
 
-    while inputFrame != '!' and count < 50: 
+    while inputFrame != '!' and count < 40: 
         print(f'Converting frame {count}')
 
         #Decode to convert back into an image
@@ -72,7 +72,7 @@ def extractFrames(clipFileName, colorFrames):
     count = 0
     success,image = vidcap.read()           #Reading first frame
     print(f'Reading frame {count} {success}')
-    while success:
+    while success anc count < 40:
         
         #Get a jpg encoded frame
         success, jpgImage = cv2.imencode('.jpg', image)
