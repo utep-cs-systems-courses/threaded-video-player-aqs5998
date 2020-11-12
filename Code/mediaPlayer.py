@@ -87,7 +87,7 @@ class queueThread:
     def __init__(self):
         self.queue=[]
         self.full=threading.Semaphore(0)
-        self.empty = threading.Semaphore(24) #Allows 24 frames to be loaded at a time
+        self.empty = threading.Semaphore(5) #Allows 24 frames to be loaded at a time
         self.lock=threading.Lock()
     def enqueue(self, item):
         self.empty.acquire()
