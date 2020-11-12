@@ -72,7 +72,7 @@ def extractFrames(clipFileName, colorFrames):
     count = 0
     success,image = vidcap.read()           #Reading first frame
     print(f'Reading frame {count} {success}')
-    while success anc count < 40:
+    while success and count < 40:
         
         #Get a jpg encoded frame
         success, jpgImage = cv2.imencode('.jpg', image)
