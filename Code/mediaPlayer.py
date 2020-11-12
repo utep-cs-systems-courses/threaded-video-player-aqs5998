@@ -19,7 +19,8 @@ def convertToGray(colorframes, grayframes):
 
     while inputFrame != '!': 
         print(f'Converting frame {count}')
-
+        if inputFrame == '!':
+            break
         #Decode to convert back into an image
         image = cv2.imdecode(inputFrame, cv2.IMREAD_UNCHANGED)
         
