@@ -100,8 +100,8 @@ class queueThread:
         self.lock.release()
         self.empty.release()
         return frame
-colorFrames = queueThread(10)
-grayFrames = queueThread(10)
+colorFrames = queueThread()
+grayFrames = queueThread()
 extraceT = threading.Thread(target = extractFrames, args = (clipFileName, colorFrames))
 convertT = threading.Thread(target = convertToGray, args = (clipFileName, colorFrames))
 displayT = threading.Thread(target = displayFrames, args = (grayFrames,))
