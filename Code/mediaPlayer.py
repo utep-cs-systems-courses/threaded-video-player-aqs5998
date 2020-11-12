@@ -68,7 +68,7 @@ def displayFrames(grayFrames):
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
     if count == 100:
-        sys.exit(1)
+        sys.exit(0)
 
 def extractFrames(clipFileName, colorFrames):
     vidcap = cv2.VideoCapture(clipFileName) #Getting the video
