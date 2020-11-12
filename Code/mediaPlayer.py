@@ -6,6 +6,7 @@ import base64
 import queue
 import os
 import queue
+import sys
 # globals
 
 clipFileName = '../clip.mp4'
@@ -66,6 +67,8 @@ def displayFrames(grayFrames):
 
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
+    if count == 100:
+        sys.exit(1)
 
 def extractFrames(clipFileName, colorFrames):
     vidcap = cv2.VideoCapture(clipFileName) #Getting the video
