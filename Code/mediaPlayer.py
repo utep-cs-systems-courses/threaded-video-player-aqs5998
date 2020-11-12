@@ -23,12 +23,9 @@ def convertToGray(colorframes, grayframes):
 
         #Convert fram to gray
         grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)
-
-        #Encode the image again to store into the next queue
-        success, jpgImage = cv2.imencode('.jpg', grayscaleFrame)
         
         #change it to enqueue into the grayFramesQueue
-        grayFrames.enqueue(jpgImage)
+        grayFrames.enqueue(grayscaleFrame)
         count += 1
 
         #Dequeue the next jpg encoded frame
