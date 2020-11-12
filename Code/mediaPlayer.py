@@ -67,7 +67,7 @@ def displayFrames(grayFrames):
 
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
-    sys.exit(0)
+    sys.exit("End of program")
 
 def extractFrames(clipFileName, colorFrames):
     vidcap = cv2.VideoCapture(clipFileName) #Getting the video
@@ -75,7 +75,6 @@ def extractFrames(clipFileName, colorFrames):
     success,image = vidcap.read()           #Reading first frame
     print(f'Reading frame {count} {success}')
     while success:
-        
         #Get a jpg encoded frame
         success, jpgImage = cv2.imencode('.jpg', image)
         colorFrames.enqueue(jpgImage)
