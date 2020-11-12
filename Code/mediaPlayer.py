@@ -17,7 +17,7 @@ def convertToGray(colorframes, grayframes):
     # get the first jpg encoded frame from the queue
     inputFrame = colorframes.dequeue()
 
-    while inputFrame != '!': #Will continue until all color frames are dequeued
+    while inputFrame != '!' and count < 50: 
         print(f'Converting frame {count}')
 
         #Decode to convert back into an image
@@ -46,7 +46,7 @@ def displayFrames(grayFrames):
     # load the first gray frame
     frame = grayFrames.dequeue() 
 
-    while frame != '!':
+    while frame != '!' and count < 40:
         print(f'Displaying frame {count}')
 
         # Decode back the frame into an image
@@ -86,7 +86,7 @@ class queueThread:
     def __init__(self):
         self.queue=[]
         self.full=threading.Semaphore(0)
-        self.empty = threading.Semaphore(5)
+        self.empty = threading.Semaphore(24) #Allows 24 frames to be loaded at a time
         self.lock=threading.Lock()
     def enqueue(self, item):
         self.empty.acquire()
