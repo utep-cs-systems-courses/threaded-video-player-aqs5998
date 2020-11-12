@@ -17,7 +17,7 @@ def convertToGray(colorframes, grayframes):
     # get the first jpg encoded frame from the queue
     inputFrame = colorframes.dequeue()
 
-    while inputFrame is not None and count < 72:
+    while inputFrame != '!': #Will continue until all color frames are dequeued
         print(f'Converting frame {count}')
 
         #Decode to convert back into an image
