@@ -7,7 +7,7 @@ import queue
 import os
 import queue
 # globals
-outputDir    = 'frames'
+
 clipFileName = '../clip.mp4'
 def convertToGray(colorframes, grayframes):
      # initialize frame count
@@ -31,30 +31,33 @@ def convertToGray(colorframes, grayframes):
         inputFrame = colorFrames.dequeue() ###
     grayFrames.enqueue(None)
 def displayFrames(grayFrames):
-    # globals
-    outputDir    = 'frames'
-    frameDelay   = 42       # the answer to everything
     # initialize frame count
     count = 0
-    # Generate the filename for the first frame 
-    frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
+    # Generate the filename for the first frame
+    #TODO change to read/dequeue from the grayFramesBuffer
+    
     # load the frame
-    frame = cv2.imread(frameFileName)
+    frame = grayFrames.dequeue() 
+
     while frame is not None:
-        
         print(f'Displaying frame {count}')
+        # convert the raw frame to a numpy array
+        frame = np.asarray(bytearray(frame), dtype = np.uint8)
+        # get a jpg encoded frame
+        image = cv2.imdecode(frame, cv2.IMREAD_UNCHANGED)
         # Display the frame in a window called "Video"
-        cv2.imshow('Video', frame)
+        cv2.imshow('Video', image)
         # Wait for 42 ms and check if the user wants to quit
-        if cv2.waitKey(frameDelay) and 0xFF == ord("q"):
-            break    
+        if cv2.waitKey(42) and 0xFF == ord("q"):
+            break
         # get the next frame filename
         count += 1
-        frameFileName = f'{outputDir}/grayscale_{count:04d}.bmp'
+        #TODO dequeue from grayFramesBuffer the next frame
         # Read the next frame file
-        frame = cv2.imread(frameFileName)
+        frame = grayFrames.dequeue()
     # make sure we cleanup the windows, otherwise we might end up with a mess
     cv2.destroyAllWindows()
+
 def extractFrames(clipFileName, colorFrames):
     count = 0
     vidcap = cv2.VideoCapture(clipFileName)
