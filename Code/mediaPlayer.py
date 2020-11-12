@@ -18,14 +18,20 @@ def convertToGray(colorframes, grayframes):
     # get the first jpg encoded frame from the queue
     inputFrame = colorframes.dequeue()
 
-    while inputFrame != '!' and count <= 100: 
+    while inputFrame is not None:
         print(f'Converting frame {count}')
 
-        #Convert fram to gray
-        grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)
+        #Decode to convert back into an image
+        image = cv2.imdecode(inputFrame, cv2.IMREAD_UNCHANGED)
+        
+        # convert the image to grayscale
+        grayscaleFrame = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        #Encode the image again to store into the next queue
+        success, jpgImage = cv2.imencode('.jpg', grayscaleFrame)
         
         #change it to enqueue into the grayFramesQueue
-        grayFrames.enqueue(grayscaleFrame)
+        grayFrames.enqueue(jpgImage)
         count += 1
 
         #Dequeue the next jpg encoded frame
@@ -41,8 +47,11 @@ def displayFrames(grayFrames):
     # load the first gray frame
     frame = grayFrames.dequeue() 
 
-    while frame != '!' and count <= 100: 
+    while frame is not None:
         print(f'Displaying frame {count}')
+
+        # Decode back the frame into an image
+        image = cv2.imdecode(frame, cv2.IMREAD_UNCHANGED)
         
         # Display the frame/image in a window called "Video"
         cv2.imshow('Video', image)
