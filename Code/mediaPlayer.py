@@ -21,11 +21,8 @@ def convertToGray(colorframes, grayframes):
     while inputFrame != '!' and count <= 100: 
         print(f'Converting frame {count}')
 
-        #Decode to convert back into an image
-        image = cv2.imdecode(inputFrame, cv2.IMREAD_UNCHANGED)
-        
-        # convert the image to grayscale
-        grayscaleFrame = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        #Convert fram to gray
+        grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)
 
         #Encode the image again to store into the next queue
         success, jpgImage = cv2.imencode('.jpg', grayscaleFrame)
