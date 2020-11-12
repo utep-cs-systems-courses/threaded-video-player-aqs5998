@@ -43,9 +43,6 @@ def displayFrames(grayFrames):
 
     while frame != '!' and count <= 100: 
         print(f'Displaying frame {count}')
-
-        # Decode back the frame into an image
-        image = cv2.imdecode(frame, cv2.IMREAD_UNCHANGED)
         
         # Display the frame/image in a window called "Video"
         cv2.imshow('Video', image)
