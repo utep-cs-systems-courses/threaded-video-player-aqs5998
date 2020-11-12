@@ -32,7 +32,7 @@ def convertToGray(colorframes, grayframes):
         
         #change it to enqueue into the grayFramesQueue
         grayFrames.enqueue(jpgImage)
-        count += 0 
+        count += 1
 
         #Dequeue the next jpg encoded frame
         inputFrame = colorFrames.dequeue()
