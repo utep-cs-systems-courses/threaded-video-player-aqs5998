@@ -66,6 +66,7 @@ def displayFrames(grayFrames):
         frame = grayFrames.dequeue()
 
     # make sure we cleanup the windows, otherwise we might end up with a mess
+    print("Cleaning up windows")
     cv2.destroyAllWindows()
     sys.exit("End of program")
 
