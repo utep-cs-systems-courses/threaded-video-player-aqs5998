@@ -18,7 +18,7 @@ def convertToGray(colorframes, grayframes):
     # get the first jpg encoded frame from the queue
     inputFrame = colorframes.dequeue()
 
-    while inputFrame != '!' and count < 100: 
+    while inputFrame != '!' and count <= 100: 
         print(f'Converting frame {count}')
 
         #Decode to convert back into an image
@@ -47,7 +47,7 @@ def displayFrames(grayFrames):
     # load the first gray frame
     frame = grayFrames.dequeue() 
 
-    while frame != '!' and count < 100: 
+    while frame != '!' and count <= 100: 
         print(f'Displaying frame {count}')
 
         # Decode back the frame into an image
