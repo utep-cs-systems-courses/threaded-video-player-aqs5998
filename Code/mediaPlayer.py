@@ -46,7 +46,7 @@ def displayFrames(grayFrames):
     # load the first gray frame
     frame = grayFrames.dequeue() 
 
-    while frame is not None:
+    while frame != '!':
         print(f'Displaying frame {count}')
 
         # Decode back the frame into an image
